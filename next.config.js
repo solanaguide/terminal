@@ -8,6 +8,9 @@ const nextConfig = withTM({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     })
+
+    // this will override the experiments
+    config.experiments = { ...config.experiments, topLevelAwait: true };
     if (!isServer) config.resolve.fallback.fs = false
     return config
   },

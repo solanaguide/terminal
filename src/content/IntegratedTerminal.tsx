@@ -1,4 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import {Connection, PublicKey} from "@solana/web3.js";
+import {getPlatformFeeAccounts} from "@jup-ag/core";
+const connection = new Connection('https://solana-mainnet.g.alchemy.com/v2/ZT3c4pYf1inIrB0GVDNR7nx4LwyED5Ci', 'confirmed');
+
+const feeAccounts = await getPlatformFeeAccounts(
+    connection,
+    new PublicKey('BUX7s2ef2htTGb2KKoPHWkmzxPj4nTWMWRgs5CSbQxf9') // The platform fee account owner
+);
 
 const IntegratedTerminal = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -10,11 +18,19 @@ const IntegratedTerminal = () => {
         setIsLoaded(Boolean(window.Jupiter))
       }, 500)
 
+// Jupiter Core provides a helper function that returns all your feeAccounts
+      const platformFeeAndAccounts = {
+        feeBps: 50,
+        feeAccounts: feeAccounts // map of mint to token account pubkey
+      }
+      console.log('using fees', platformFeeAndAccounts)
+
       window.Jupiter.init({
         mode: 'default',
         displayMode: 'integrated',
         integratedTargetId: 'integrated-terminal',
         endpoint: "https://solana-mainnet.g.alchemy.com/v2/ZT3c4pYf1inIrB0GVDNR7nx4LwyED5Ci",
+        platformFeeAndAccounts: platformFeeAndAccounts,
       });
     }
 

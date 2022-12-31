@@ -52,6 +52,7 @@ const SwappingScreen = () => {
     selectedSwapRoute,
     fromTokenInfo,
     toTokenInfo,
+    lastBurnAmount,
     jupiter: { routes, refresh },
   } = useSwapContext();
   const { screen, setScreen } = useScreenState();
@@ -216,6 +217,11 @@ const SwappingScreen = () => {
               containerClassName="bg-[#25252D] border-none mt-0"
             />
           </div>
+          { lastBurnAmount > 0 ? (<div className="mt-2 flex flex-col items-center justify-center text-center px-4">
+            <p className="text-xs font-semibold text-white/75">
+                🔥 You just burned {fromLamports(lastBurnAmount, 5)} $BONK
+            </p>
+          </div>) : null}
         </div>
 
         {solscanLink ? (

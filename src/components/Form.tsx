@@ -46,10 +46,14 @@ const Form: React.FC<{
     const {
       form,
       setForm,
+      priority,
+      setPriority,
+      computeEstimate,
       errors,
       fromTokenInfo,
       toTokenInfo,
       selectedSwapRoute,
+      setSelectedSwapRoute,
       mode,
       jupiter: {
         routes,
@@ -125,6 +129,20 @@ const Form: React.FC<{
     }
 
     const marketRoutes = selectedSwapRoute ? selectedSwapRoute.marketInfos.map(({ label }) => label).join(', ') : '';
+    var priorityStep = 0
+
+    const onChangePriority = (e: ChangeEvent<HTMLInputElement>) => {
+        // let steps = [1, 5000, 25000, 50000, 250000, 500000, 2500000, 5_000_000, 25_000_000, 100_000_000, 500_000_000 ]
+        // let index = Number(e.target.value)
+        // priorityStep = index
+        let p =Number(e.target.value)
+        setPriority(p)
+        // update fee on selectedRouteInfo
+        let newSelectedRouteInfo = selectedSwapRoute
+        newSelectedRouteInfo.fees.signatureFee = ((computeEstimate || 1400000) * 0.000001 * priority) + 5000,
+        setSelectedSwapRoute(newSelectedRouteInfo)
+    }
+
     return (
       <div className="h-full flex flex-col items-center justify-center pb-4">
         <div className="w-full mt-2 rounded-xl flex flex-col px-2">
@@ -241,6 +259,16 @@ const Form: React.FC<{
                   <span className='text-white/50'>{marketRoutes}</span>
                 </div>
               ) : null}
+
+              <div className='flex items-center mt-2 text-xs space-x-1'>
+                <div className='bg-black/20 rounded-xl px-2 py-1 cursor-pointer text-white/50 flex items-center space-x-1 w-full' >
+                    <span>Priority:</span>
+                    <input type="range" value={priority} min={0} max={1_000_000} step={5_000} onInput={onChangePriority} className='w-full mx-2' />
+                    <p>
+                        <span>Estimated Fee: { (( ((computeEstimate || 1400000) * 0.000001 * priority) +5000) / 1e9 ).toFixed(9)}</span>
+                    </p>
+                </div>
+              </div>
           </div>
         </div>
 

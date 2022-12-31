@@ -107,5 +107,9 @@ module.exports = {
       new CssMinimizerPlugin(),
     ],
     minimize: true,
+
+  },
+  experiments: {
+    topLevelAwait: true
   }
 };
